@@ -181,6 +181,53 @@ export class OpenRouterApi implements ApiFacade {
 	}
 }
 
+export class OllamaApi implements ApiFacade {
+	async create(apiKey: string, request: string, provider: ChatModel, content: Buffer[], mimeType: string, isUrl?: boolean, url?: string): Promise<string[]> {
+		try {
+			const config = vscode.workspace.getConfiguration();
+			const endpoint = config.get<string>('copilot.vision.ollamaEndpoint') || 'http://localhost:11434';
+
+			const prompts: ChatCompletionContentPart[] = [
+				{ type: 'text', text: request },
+			];
+
+			if (isUrl && url) {
+				prompts.push({ type: 'image_url', image_url: { url } });
+			}
+
+			for (const data of content) {
+				const base64 = data.toString('base64');
+				prompts.push({ type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}` } });
+			}
+
+			// Ollama uses OpenAI-compatible API
+			const client = new OpenAI({
+				baseURL: `${endpoint}/v1`,
+				apiKey: apiKey || 'ollama' // Ollama doesn't require an API key, but the client needs something
+			});
+
+			const result = await client.chat.completions.create({
+				model: provider.model,
+				messages: [
+					{ role: 'user', content: prompts }
+				]
+			});
+
+			const messages = [];
+
+			for (const choice of result.choices) {
+				if (choice.message.content) {
+					messages.push(choice.message.content);
+				}
+			}
+			return messages;
+		} catch (error) {
+			console.error('Error in OllamaApi:', error);
+			throw error;
+		}
+	}
+}
+
 export class AzureOpenAIApi implements ApiFacade {
 	async create(apiKey: string, request: string, provider: ChatModel, content: Buffer[], mimeType: string, isUrl?: boolean, url?: string): Promise<string[]> {
 		try {
@@ -246,6 +293,8 @@ export function getApi(type: ProviderType): ApiFacade {
 			return new AzureOpenAIApi();
 		case ProviderType.OpenRouter:
 			return new OpenRouterApi();
+		case ProviderType.Ollama:
+			return new OllamaApi();
 		default:
 			throw new Error('Invalid model type');
 	}

@@ -19,7 +19,8 @@ export enum ProviderType {
 	OpenAI = 'OpenAI',
 	Gemini = 'Gemini',
 	AzureOpenAI = 'AzureOpenAI',
-	OpenRouter = 'OpenRouter'
+	OpenRouter = 'OpenRouter',
+	Ollama = 'Ollama'
 }
 
 export interface ChatModel {
@@ -200,7 +201,8 @@ export function subscribe(context: vscode.ExtensionContext) {
 			{ label: ProviderType.OpenAI },
 			{ label: ProviderType.Gemini },
 			{ label: ProviderType.AzureOpenAI },
-			{ label: ProviderType.OpenRouter }
+			{ label: ProviderType.OpenRouter },
+			{ label: ProviderType.Ollama }
 		];
 
 		const selectedModel = await vscode.window.showQuickPick(providers, {
@@ -230,6 +232,24 @@ export function subscribe(context: vscode.ExtensionContext) {
 			}
 
 			await config.update('copilot.vision.azureEndpoint', input, vscode.ConfigurationTarget.Global);
+		}
+
+		if (selectedModel.label === ProviderType.Ollama) {
+			const currentEndpoint = config.get<string>('copilot.vision.ollamaEndpoint');
+
+			const input = await vscode.window.showInputBox({
+				placeHolder: currentEndpoint ? vscode.l10n.t(`Current Endpoint: ${currentEndpoint}`) : vscode.l10n.t('Enter an Ollama Endpoint. Example: http://localhost:11434'),
+				prompt: 'Please enter an endpoint for the selected provider.',
+				validateInput: (text: string) => {
+					return text.length === 0 ? 'Input cannot be empty' : undefined;
+				},
+			});
+
+			if (!input) {
+				return;
+			}
+
+			await config.update('copilot.vision.ollamaEndpoint', input, vscode.ConfigurationTarget.Global);
 		}
 
 		const chatModel = getModel();

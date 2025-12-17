@@ -5,7 +5,7 @@ Vision is currently available in the latest version of VS Code. Read more about 
 Vision for Copilot Preview is an extension that enhances chat interactions by enabling users to leverage advanced vision capabilities. This preview feature allows users to attach images directly as contextual input, enriching conversations and enabling more dynamic, visually-supported responses. 
 
 ### Chat
-For now, users can experience the image attachment flow in the chat panel by using their own OpenAI, Azure OpenAI, Anthropic, Gemini, or OpenRouter keys. Get started by easily attaching images from the clipboard or dragging them directly into the chat. 
+For now, users can experience the image attachment flow in the chat panel by using their own OpenAI, Azure OpenAI, Anthropic, Gemini, OpenRouter, or Ollama keys. Get started by easily attaching images from the clipboard or dragging them directly into the chat. 
 ![Screenshot of a chat exchange. A user asks for HTML and CSS for a landing page. The response provides a basic HTML structure with a header, navigation links (Home, About, Contact), and a link to an external CSS file.](https://raw.githubusercontent.com/microsoft/vscode-copilot-vision/refs/heads/main/assets/demo.gif)
 
 ### Quick Fixes
@@ -21,7 +21,7 @@ Additionally, users can generate or refine alt text for images in markdown, HTML
 - Troubleshoot (screenshots the VS Code window and sends it to chat).
 
 ### Settings
-- `copilot.vision.provider`: The selected provider (currently limited to OpenAI, Anthropic, Gemini, AzureOpenAI, and OpenRouter).
+- `copilot.vision.provider`: The selected provider (currently limited to OpenAI, Anthropic, Gemini, AzureOpenAI, OpenRouter, and Ollama).
 - `copilot.vision.model`: The model for the currently selected provider.
 
 ### Notes
@@ -54,6 +54,21 @@ Additionally, users can generate or refine alt text for images in markdown, HTML
 6. When prompted, enter your OpenRouter API key.
 
 OpenRouter provides unified access to multiple AI models through a single API. You can browse available vision models and their pricing at https://openrouter.ai/models?q=vision
+
+# How do I use Ollama?
+1. Install Ollama from https://ollama.ai/
+2. Download a vision-capable model (e.g., `ollama pull llava`, `ollama pull llava:13b`, or `ollama pull bakllava`).
+3. Start Ollama if it's not already running (it typically runs automatically on installation).
+4. In VS Code, run "Copilot Vision: Set a Provider and Model" command.
+5. Select "Ollama" from the provider list.
+6. Enter the Ollama endpoint (default is `http://localhost:11434`).
+7. Enter the model name you downloaded (e.g., `llava`, `llava:13b`, `bakllava`).
+8. When prompted for an API key, you can enter any value (Ollama doesn't require authentication by default).
+
+Ollama allows you to run vision models locally on your machine, providing privacy and offline capabilities. Popular vision models include:
+- `llava` - LLaVA 7B model
+- `llava:13b` - LLaVA 13B model (better quality, requires more resources)
+- `bakllava` - BakLLaVA model
 
 ## Trademarks
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow Microsoft's Trademark & Brand Guidelines. Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.

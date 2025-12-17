@@ -31,6 +31,7 @@
 		"gemini",
 		"claude",
 		"openrouter",
+		"ollama",
 		"vision",
 		"accessibility",
 		"images",
@@ -53,7 +54,8 @@
 						"Anthropic",
 						"Gemini",
 						"AzureOpenAI",
-						"OpenRouter"
+						"OpenRouter",
+						"Ollama"
 					],
 					"default": "OpenAI",
 					"description": "The selected provider."
@@ -62,6 +64,11 @@
 					"type": "string",
 					"default": "",
 					"description": "An endpoint specifically for Azure OpenAI."
+				},
+				"copilot.vision.ollamaEndpoint": {
+					"type": "string",
+					"default": "http://localhost:11434",
+					"description": "The Ollama API endpoint."
 				},
 				"copilot.vision.model": {
 					"type": "string",
