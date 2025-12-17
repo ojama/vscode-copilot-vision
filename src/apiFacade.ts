@@ -182,6 +182,8 @@ export class OpenRouterApi implements ApiFacade {
 }
 
 export class OllamaApi implements ApiFacade {
+	private static readonly OLLAMA_PLACEHOLDER_KEY = 'ollama';
+
 	async create(apiKey: string, request: string, provider: ChatModel, content: Buffer[], mimeType: string, isUrl?: boolean, url?: string): Promise<string[]> {
 		try {
 			const config = vscode.workspace.getConfiguration();
@@ -203,7 +205,7 @@ export class OllamaApi implements ApiFacade {
 			// Ollama uses OpenAI-compatible API
 			const client = new OpenAI({
 				baseURL: `${endpoint}/v1`,
-				apiKey: apiKey || 'ollama' // Ollama doesn't require an API key, but the client needs something
+				apiKey: apiKey || OllamaApi.OLLAMA_PLACEHOLDER_KEY // Ollama doesn't require an API key, but the client needs something
 			});
 
 			const result = await client.chat.completions.create({

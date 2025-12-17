@@ -238,10 +238,10 @@ export function subscribe(context: vscode.ExtensionContext) {
 			const currentEndpoint = config.get<string>('copilot.vision.ollamaEndpoint');
 
 			const input = await vscode.window.showInputBox({
-				placeHolder: currentEndpoint ? vscode.l10n.t(`Current Endpoint: ${currentEndpoint}`) : vscode.l10n.t('Enter an Ollama Endpoint. Example: http://localhost:11434'),
-				prompt: 'Please enter an endpoint for the selected provider.',
+				placeHolder: currentEndpoint || vscode.l10n.t('http://localhost:11434'),
+				prompt: vscode.l10n.t('Please enter an Ollama endpoint (e.g., http://localhost:11434)'),
 				validateInput: (text: string) => {
-					return text.length === 0 ? 'Input cannot be empty' : undefined;
+					return text.length === 0 ? vscode.l10n.t('Input cannot be empty') : undefined;
 				},
 			});
 

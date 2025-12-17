@@ -5,7 +5,7 @@ Vision is currently available in the latest version of VS Code. Read more about 
 Vision for Copilot Preview is an extension that enhances chat interactions by enabling users to leverage advanced vision capabilities. This preview feature allows users to attach images directly as contextual input, enriching conversations and enabling more dynamic, visually-supported responses. 
 
 ### Chat
-For now, users can experience the image attachment flow in the chat panel by using their own OpenAI, Azure OpenAI, Anthropic, Gemini, OpenRouter, or Ollama keys. Get started by easily attaching images from the clipboard or dragging them directly into the chat. 
+For now, users can experience the image attachment flow in the chat panel by using their own OpenAI, Azure OpenAI, Anthropic, Gemini, OpenRouter keys, or by running Ollama locally. Get started by easily attaching images from the clipboard or dragging them directly into the chat. 
 ![Screenshot of a chat exchange. A user asks for HTML and CSS for a landing page. The response provides a basic HTML structure with a header, navigation links (Home, About, Contact), and a link to an external CSS file.](https://raw.githubusercontent.com/microsoft/vscode-copilot-vision/refs/heads/main/assets/demo.gif)
 
 ### Quick Fixes
