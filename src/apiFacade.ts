@@ -203,9 +203,10 @@ export class OllamaApi implements ApiFacade {
 			}
 
 			// Ollama uses OpenAI-compatible API
+			// API key is required for cloud models (https://ollama.com/api) but optional for local usage
 			const client = new OpenAI({
 				baseURL: `${endpoint}/v1`,
-				apiKey: apiKey || OllamaApi.OLLAMA_PLACEHOLDER_KEY // Ollama doesn't require an API key, but the client needs something
+				apiKey: apiKey || OllamaApi.OLLAMA_PLACEHOLDER_KEY
 			});
 
 			const result = await client.chat.completions.create({

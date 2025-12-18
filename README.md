@@ -56,6 +56,8 @@ Additionally, users can generate or refine alt text for images in markdown, HTML
 OpenRouter provides unified access to multiple AI models through a single API. You can browse available vision models and their pricing at https://openrouter.ai/models?q=vision
 
 # How do I use Ollama?
+
+## Local Usage (No API Key Required)
 1. Install Ollama from https://ollama.ai/
 2. Download a vision-capable model (e.g., `ollama pull llava`, `ollama pull llava:13b`, or `ollama pull bakllava`).
 3. Start Ollama if it's not already running (it typically runs automatically on installation).
@@ -63,9 +65,18 @@ OpenRouter provides unified access to multiple AI models through a single API. Y
 5. Select "Ollama" from the provider list.
 6. Enter the Ollama endpoint (default is `http://localhost:11434`).
 7. Enter the model name you downloaded (e.g., `llava`, `llava:13b`, `bakllava`).
-8. When prompted for an API key, you can enter any value (Ollama doesn't require authentication by default).
+8. When prompted for an API key, you can enter any value (local usage doesn't require authentication).
 
-Ollama allows you to run vision models locally on your machine, providing privacy and offline capabilities. Popular vision models include:
+## Cloud Usage (API Key Required)
+1. Sign up for Ollama Cloud at https://ollama.com/
+2. Create an API key from your Ollama Cloud dashboard.
+3. In VS Code, run "Copilot Vision: Set a Provider and Model" command.
+4. Select "Ollama" from the provider list.
+5. Enter the Ollama cloud endpoint: `https://ollama.com/api`
+6. Enter a cloud model name (e.g., `gpt-oss:120b` or other cloud-hosted models).
+7. When prompted for an API key, enter your Ollama Cloud API key.
+
+Ollama allows you to run vision models locally on your machine (providing privacy and offline capabilities) or use cloud models. Popular local vision models include:
 - `llava` - LLaVA 7B model
 - `llava:13b` - LLaVA 13B model (better quality, requires more resources)
 - `bakllava` - BakLLaVA model
