@@ -73,7 +73,7 @@ OpenRouter provides unified access to multiple AI models through a single API. Y
 3. In VS Code, run "Copilot Vision: Set a Provider and Model" command.
 4. Select "Ollama" from the provider list.
 5. Enter the Ollama cloud endpoint: `https://ollama.com/api`
-6. Enter a cloud model name (e.g., `gpt-oss:120b` or other cloud-hosted models).
+6. Enter a cloud model name (e.g., `llava:13b`, `qwen2-vl:7b`, or other cloud-hosted vision models).
 7. When prompted for an API key, enter your Ollama Cloud API key.
 
 Ollama allows you to run vision models locally on your machine (providing privacy and offline capabilities) or use cloud models. Popular local vision models include:
