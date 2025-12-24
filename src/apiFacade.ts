@@ -182,8 +182,6 @@ export class OpenRouterApi implements ApiFacade {
 }
 
 export class OllamaApi implements ApiFacade {
-	private static readonly OLLAMA_PLACEHOLDER_KEY = 'ollama';
-
 	async create(apiKey: string, request: string, provider: ChatModel, content: Buffer[], mimeType: string, isUrl?: boolean, url?: string): Promise<string[]> {
 		try {
 			const config = vscode.workspace.getConfiguration();
@@ -202,19 +200,32 @@ export class OllamaApi implements ApiFacade {
 				prompts.push({ type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}`, detail: 'high' } });
 			}
 
-			// Ollama uses OpenAI-compatible API
-			// API key is required for cloud models (https://ollama.com/api) but optional for local usage
-			const client = new OpenAI({
-				baseURL: `${endpoint}/v1`,
-				apiKey: apiKey || OllamaApi.OLLAMA_PLACEHOLDER_KEY
-			});
+			const headers: Record<string, string> = {
+				'Content-Type': 'application/json'
+			};
+			if (apiKey) {
+				headers['Authorization'] = `Bearer ${apiKey}`;
+			}
 
-			const result = await client.chat.completions.create({
+			const body = {
 				model: provider.model,
 				messages: [
 					{ role: 'user', content: prompts }
-				]
+				],
+				stream: false
+			};
+
+			const response = await fetch(`${endpoint}/v1/chat/completions`, {
+				method: 'POST',
+				headers,
+				body: JSON.stringify(body)
 			});
+
+			if (!response.ok) {
+				throw new Error(`Ollama API request failed with status ${response.status}: ${response.statusText}`);
+			}
+
+			const result = await response.json() as any;
 
 			const messages = [];
 

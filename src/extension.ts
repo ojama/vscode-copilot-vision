@@ -43,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		let { currentModel, currentToken } = await initializeModelAndToken(stream, context);
 
-		if (!currentModel || !currentToken) {
+		if (!currentModel || currentToken === undefined) {
 			throw new Error('Something went wrong in the auth flow.');
 		}
 
@@ -158,13 +158,15 @@ export async function initializeModelAndToken(stream?: vscode.ChatResponseStream
 	const key = await context?.secrets.get(chatModel.provider as ProviderType);
 	if (key) {
 		contextToken = key;
+	} else if (chatModel.provider === ProviderType.Ollama) {
+		contextToken = '';
 	} else {
 		// Wait for the API key to be set
 		await vscode.commands.executeCommand('copilot.vision.setApiKey');
 		contextToken = await context?.secrets.get(chatModel.provider as ProviderType);
 	}
 
-	if (!contextToken) {
+	if (!contextToken && chatModel.provider !== ProviderType.Ollama) {
 		throw new Error('API key was not properly set');
 	}
 
