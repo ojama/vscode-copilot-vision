@@ -19,7 +19,8 @@ export enum ProviderType {
 	OpenAI = 'OpenAI',
 	Gemini = 'Gemini',
 	AzureOpenAI = 'AzureOpenAI',
-	OpenRouter = 'OpenRouter'
+	OpenRouter = 'OpenRouter',
+	Ollama = 'Ollama'
 }
 
 export interface ChatModel {
@@ -42,7 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		let { currentModel, currentToken } = await initializeModelAndToken(stream, context);
 
-		if (!currentModel || !currentToken) {
+		if (!currentModel || currentToken === undefined) {
 			throw new Error('Something went wrong in the auth flow.');
 		}
 
@@ -157,13 +158,15 @@ export async function initializeModelAndToken(stream?: vscode.ChatResponseStream
 	const key = await context?.secrets.get(chatModel.provider as ProviderType);
 	if (key) {
 		contextToken = key;
+	} else if (chatModel.provider === ProviderType.Ollama) {
+		contextToken = '';
 	} else {
 		// Wait for the API key to be set
 		await vscode.commands.executeCommand('copilot.vision.setApiKey');
 		contextToken = await context?.secrets.get(chatModel.provider as ProviderType);
 	}
 
-	if (!contextToken) {
+	if (!contextToken && chatModel.provider !== ProviderType.Ollama) {
 		throw new Error('API key was not properly set');
 	}
 
@@ -200,7 +203,8 @@ export function subscribe(context: vscode.ExtensionContext) {
 			{ label: ProviderType.OpenAI },
 			{ label: ProviderType.Gemini },
 			{ label: ProviderType.AzureOpenAI },
-			{ label: ProviderType.OpenRouter }
+			{ label: ProviderType.OpenRouter },
+			{ label: ProviderType.Ollama }
 		];
 
 		const selectedModel = await vscode.window.showQuickPick(providers, {
@@ -230,6 +234,24 @@ export function subscribe(context: vscode.ExtensionContext) {
 			}
 
 			await config.update('copilot.vision.azureEndpoint', input, vscode.ConfigurationTarget.Global);
+		}
+
+		if (selectedModel.label === ProviderType.Ollama) {
+			const currentEndpoint = config.get<string>('copilot.vision.ollamaEndpoint');
+
+			const input = await vscode.window.showInputBox({
+				placeHolder: currentEndpoint || vscode.l10n.t('http://localhost:11434'),
+				prompt: vscode.l10n.t('Please enter an Ollama endpoint (e.g., http://localhost:11434)'),
+				validateInput: (text: string) => {
+					return text.length === 0 ? vscode.l10n.t('Input cannot be empty') : undefined;
+				},
+			});
+
+			if (!input) {
+				return;
+			}
+
+			await config.update('copilot.vision.ollamaEndpoint', input, vscode.ConfigurationTarget.Global);
 		}
 
 		const chatModel = getModel();
